@@ -1,5 +1,5 @@
     import {jsonData} from "./jsonData.js"
-    console.log(jsonData)
+    // console.log(jsonData)
 
     const componentContainer = document.querySelector('.components');
     const formContainer = document.querySelector('.form-container')
@@ -20,7 +20,7 @@
                     id : Date.now().toString() ,
                     label: "Sample Label",
                 placeholder : 'Sample Placeholder',
-                type : 'select'
+                type : element.type
                 })
             }
 
@@ -52,15 +52,21 @@
 
         
         const delBtns = document.querySelectorAll('.del-btn');
-        console.log(delBtns.length);
+        // console.log(delBtns.length);
         delBtns.forEach((btn,idx) => {
             btn.addEventListener('click',(e) => {
-                jsonData.splice(idx,1);
-                if(e.target.parentElement.parentElement.parentElement.nextSibling.className){
+                const formItem = e.target.parentElement.parentElement.parentElement;
+                const indexToRemove = jsonData.findIndex(item => item.id === formItem.id.slice(6));
+        
+                if (indexToRemove !== -1) {
+                    jsonData.splice(indexToRemove, 1);
+                }
+                if(e.target.parentElement.parentElement.parentElement.nextSibling?.className === 'dropbox'){
                     const dropbox = e.target.parentElement.parentElement.parentElement.nextSibling;
-                  dropbox.remove()
-                } 
-                e.target.parentElement.parentElement.parentElement.remove();
+                   dropbox.remove()
+               }
+                
+                formItem.remove();
             })
         })
 
@@ -176,12 +182,19 @@
         // console.log(delBtns.length);
         delBtns.forEach((btn,idx) => {
             btn.addEventListener('click',(e) => {
-                jsonData.splice(idx,1);
-                const dropbox = e.target.parentElement.parentElement.parentElement.nextSibling;
-                // console.log('dropbox',dropbox);
-                dropbox.remove()
+                const formItem = e.target.parentElement.parentElement.parentElement;
+                const indexToRemove = jsonData.findIndex(item => item.id === formItem.id.slice(6));
+        
+                if (indexToRemove !== -1) {
+                    jsonData.splice(indexToRemove, 1);
+                }
+                if(e.target.parentElement.parentElement.parentElement.nextSibling?.className === 'dropbox'){
+                     const dropbox = e.target.parentElement.parentElement.parentElement.nextSibling;
+                    dropbox.remove()
+                }
                 
-                e.target.parentElement.parentElement.parentElement.remove();
+                
+                formItem.remove();
             })
         })
 
@@ -192,8 +205,9 @@
         // console.log('formItems',formItems);
         const updatedJsonData = [];
         formItems.forEach(item => {
-            console.log(item.id)
+            // console.log(item.id)
             for(let i = 0; i < jsonData.length; i++){
+                // console.log(jsonData[i])
                     if(jsonData[i].id == item.id.slice(6)){
                         updatedJsonData.push(jsonData[i]);
                         break;
